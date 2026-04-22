@@ -8,25 +8,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- TODO: Add meta tags for charset (UTF-8) and viewport
-         (width=device-width, initial-scale=1.0). -->
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- TODO: Add a <title>, e.g., "Weekly Course Breakdown". -->
+<title>Weekly Course Breakdown</title>
 
-    <!-- TODO: Link to your CSS framework or stylesheet. -->
+   <style>
+  body {
+    font-family: Arial;
+    margin: 20px;
+    background-color: #f5f5f5;
+  }
 
-    <!-- Required: link list.js with defer so the DOM is ready before the
-         script runs. -->
+  header {
+    margin-bottom: 20px;
+  }
+
+  article {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+
+  a {
+    display: inline-block;
+    margin-top: 10px;
+  }
+</style>
     <script src="list.js" defer></script>
 </head>
+
 <body>
 
-    <!-- TODO: Create a <header> containing an <h1> "Weekly Course Breakdown". -->
+   <header>
+    <h1>Weekly Course Breakdown</h1>
+   </header>
 
-    <!-- TODO: Create the <main> content area. -->
+    <main>
 
-        <!-- TODO: Create a <section id="week-list-section"> to contain the
-             list of week articles. The id is required by list.js. -->
+        <section id="week-list-section">
+        </section>
 
             <!-- list.js will inject one <article> per week here.
                  Each article follows the structure below. -->
