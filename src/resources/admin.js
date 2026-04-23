@@ -2,9 +2,9 @@
   Requirement: Make the "Manage Resources" page interactive.
 */
 
-let resources = [];
-let editMode = false;
-let currentEditId = null;
+var resources = [];
+var editMode = false;
+var currentEditId = null;
 
 const resourceForm = document.querySelector('#resource-form');
 const resourcesTbody = document.querySelector('#resources-tbody');
@@ -58,8 +58,7 @@ function renderTable() {
   }
 
   for (let i = 0; i < resources.length; i += 1) {
-    const row = createResourceRow(resources[i]);
-    resourcesTbody.appendChild(row);
+    resourcesTbody.appendChild(createResourceRow(resources[i]));
   }
 }
 
