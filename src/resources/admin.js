@@ -4,19 +4,46 @@ let currentEditId = null;
 
 const resourceForm = document.querySelector('#resource-form');
 const resourcesTbody = document.querySelector('#resources-tbody');
+const titleInput = document.querySelector('#resource-title');
+const descriptionInput = document.querySelector('#resource-description');
+const linkInput = document.querySelector('#resource-link');
+const submitButton = document.querySelector('#add-resource');
 
 function createResourceRow(resource) {
   const tr = document.createElement('tr');
 
-  tr.innerHTML = `
-    <td>${resource.title}</td>
-    <td>${resource.description || ''}</td>
-    <td><a href="${resource.link}" target="_blank">${resource.link}</a></td>
-    <td>
-      <button class="edit-btn" data-id="${resource.id}">Edit</button>
-      <button class="delete-btn" data-id="${resource.id}">Delete</button>
-    </td>
-  `;
+  const titleTd = document.createElement('td');
+  titleTd.textContent = resource.title;
+
+  const descriptionTd = document.createElement('td');
+  descriptionTd.textContent = resource.description || '';
+
+  const linkTd = document.createElement('td');
+  const link = document.createElement('a');
+  link.href = resource.link;
+  link.target = '_blank';
+  link.textContent = resource.link;
+  linkTd.appendChild(link);
+
+  const actionsTd = document.createElement('td');
+
+  const editButton = document.createElement('button');
+  editButton.className = 'edit-btn';
+  editButton.dataset.id = resource.id;
+  editButton.textContent = 'Edit';
+
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'delete-btn';
+  deleteButton.dataset.id = resource.id;
+  deleteButton.textContent = 'Delete';
+
+  actionsTd.appendChild(editButton);
+  actionsTd.appendChild(deleteButton);
+
+  tr.appendChild(titleTd);
+  tr.appendChild(descriptionTd);
+  tr.appendChild(linkTd);
+  tr.appendChild(actionsTd);
 
   return tr;
 }
@@ -24,19 +51,14 @@ function createResourceRow(resource) {
 function renderTable() {
   resourcesTbody.innerHTML = '';
 
-  resources.forEach((resource) => {
-    const row = createResourceRow(resource);
-    resourcesTbody.appendChild(row);
-  });
+  for (const resource of resources) {
+    const tr = createResourceRow(resource);
+    resourcesTbody.appendChild(tr);
+  }
 }
 
 async function handleAddResource(event) {
   event.preventDefault();
-
-  const titleInput = document.querySelector('#resource-title');
-  const descriptionInput = document.querySelector('#resource-description');
-  const linkInput = document.querySelector('#resource-link');
-  const submitButton = document.querySelector('#add-resource');
 
   const title = titleInput.value.trim();
   const description = descriptionInput.value.trim();
@@ -62,8 +84,14 @@ async function handleAddResource(event) {
 
     if (result.success) {
       resources = resources.map((resource) =>
-        Number(resource.id) === Number(currentEditId)
-          ? { ...resource, title, description, link }
+        String(resource.id) === String(currentEditId)
+          ? {
+              ...resource,
+              id: currentEditId,
+              title,
+              description,
+              link
+            }
           : resource
       );
 
@@ -82,7 +110,11 @@ async function handleAddResource(event) {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ title, description, link })
+    body: JSON.stringify({
+      title,
+      description,
+      link
+    })
   });
 
   const result = await response.json();
@@ -114,7 +146,7 @@ async function handleTableClick(event) {
 
     if (result.success) {
       resources = resources.filter(
-        (resource) => Number(resource.id) !== Number(id)
+        (resource) => String(resource.id) !== String(id)
       );
       renderTable();
     }
@@ -123,15 +155,15 @@ async function handleTableClick(event) {
   if (target.classList.contains('edit-btn')) {
     const id = target.dataset.id;
     const resource = resources.find(
-      (resource) => Number(resource.id) === Number(id)
+      (item) => String(item.id) === String(id)
     );
 
     if (!resource) return;
 
-    document.querySelector('#resource-title').value = resource.title;
-    document.querySelector('#resource-description').value = resource.description || '';
-    document.querySelector('#resource-link').value = resource.link;
-    document.querySelector('#add-resource').textContent = 'Update Resource';
+    titleInput.value = resource.title;
+    descriptionInput.value = resource.description || '';
+    linkInput.value = resource.link;
+    submitButton.textContent = 'Update Resource';
 
     editMode = true;
     currentEditId = id;
@@ -142,10 +174,8 @@ async function loadAndInitialize() {
   const response = await fetch('./api/index.php');
   const result = await response.json();
 
-  if (result.success) {
-    resources = result.data;
-    renderTable();
-  }
+  resources = result.success ? result.data : [];
+  renderTable();
 
   resourceForm.addEventListener('submit', handleAddResource);
   resourcesTbody.addEventListener('click', handleTableClick);
