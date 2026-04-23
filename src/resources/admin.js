@@ -6,6 +6,12 @@ var resources = [];
 var editMode = false;
 var currentEditId = null;
 
+const resourceForm = document.querySelector('#resource-form');
+const titleInput = document.querySelector('#resource-title');
+const descriptionInput = document.querySelector('#resource-description');
+const linkInput = document.querySelector('#resource-link');
+const submitButton = document.querySelector('#add-resource');
+
 function createResourceRow(resource) {
   const tr = document.createElement('tr');
 
@@ -56,34 +62,15 @@ function renderTable() {
     tbody.removeChild(tbody.firstChild);
   }
 
-  const rows = (globalThis.resources || resources);
+  const rows = globalThis.resources || resources;
 
   for (let i = 0; i < rows.length; i += 1) {
     tbody.appendChild(createResourceRow(rows[i]));
   }
 }
 
-  if (!tbody) {
-    return;
-  }
-
-  while (tbody.firstChild) {
-    tbody.removeChild(tbody.firstChild);
-  }
-
-  for (let i = 0; i < resources.length; i += 1) {
-    tbody.appendChild(createResourceRow(resources[i]));
-  }
-
-
 async function handleAddResource(event) {
   event.preventDefault();
-
-  const resourceForm = document.querySelector('#resource-form');
-  const titleInput = document.querySelector('#resource-title');
-  const descriptionInput = document.querySelector('#resource-description');
-  const linkInput = document.querySelector('#resource-link');
-  const submitButton = document.querySelector('#add-resource');
 
   const title = titleInput.value.trim();
   const description = descriptionInput.value.trim();
@@ -101,9 +88,9 @@ async function handleAddResource(event) {
       },
       body: JSON.stringify({
         id: currentEditId,
-        title,
-        description,
-        link
+        title: title,
+        description: description,
+        link: link
       })
     });
 
@@ -119,6 +106,7 @@ async function handleAddResource(event) {
             link: link
           };
         }
+
         return resource;
       });
 
@@ -175,6 +163,7 @@ async function handleTableClick(event) {
       resources = resources.filter(function (resource) {
         return String(resource.id) !== String(id);
       });
+
       renderTable();
     }
 
@@ -192,10 +181,10 @@ async function handleTableClick(event) {
       return;
     }
 
-    document.querySelector('#resource-title').value = resource.title;
-    document.querySelector('#resource-description').value = resource.description || '';
-    document.querySelector('#resource-link').value = resource.link;
-    document.querySelector('#add-resource').textContent = 'Update Resource';
+    titleInput.value = resource.title;
+    descriptionInput.value = resource.description || '';
+    linkInput.value = resource.link;
+    submitButton.textContent = 'Update Resource';
 
     editMode = true;
     currentEditId = id;
@@ -203,7 +192,6 @@ async function handleTableClick(event) {
 }
 
 async function loadAndInitialize() {
-  const resourceForm = document.querySelector('#resource-form');
   const tbody = document.querySelector('#resources-tbody');
 
   const response = await fetch('./api/index.php');
@@ -227,3 +215,4 @@ async function loadAndInitialize() {
 }
 
 loadAndInitialize();
+
