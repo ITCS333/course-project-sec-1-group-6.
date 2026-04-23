@@ -1,31 +1,17 @@
 /*
   Requirement: Make the "Manage Resources" page interactive.
-
-  Instructions:
-  1. Link this file to `admin.html` using:
-     <script src="admin.js" defer></script>
-  
-  2. In `admin.html`, add id="resources-tbody" to the <tbody> element
-     inside your resources-table. This id is required by this script.
-  
-  3. Implement the TODOs below.
 */
 
-// --- Global Data Store ---
-// This will hold the resources loaded from the API.
 let resources = [];
 let editMode = false;
 let currentEditId = null;
 
-// --- Element Selections ---
 const resourceForm = document.querySelector('#resource-form');
 const resourcesTbody = document.querySelector('#resources-tbody');
 const titleInput = document.querySelector('#resource-title');
 const descriptionInput = document.querySelector('#resource-description');
 const linkInput = document.querySelector('#resource-link');
 const submitButton = document.querySelector('#add-resource');
-
-// --- Functions ---
 
 function createResourceRow(resource) {
   const tr = document.createElement('tr');
@@ -67,12 +53,14 @@ function createResourceRow(resource) {
 }
 
 function renderTable() {
-  resourcesTbody.innerHTML = '';
+  while (resourcesTbody.firstChild) {
+    resourcesTbody.removeChild(resourcesTbody.firstChild);
+  }
 
-  resources.forEach((resource) => {
-    const row = createResourceRow(resource);
+  for (let i = 0; i < resources.length; i += 1) {
+    const row = createResourceRow(resources[i]);
     resourcesTbody.appendChild(row);
-  });
+  }
 }
 
 async function handleAddResource(event) {
@@ -103,17 +91,18 @@ async function handleAddResource(event) {
     const result = await response.json();
 
     if (result.success) {
-      resources = resources.map((resource) =>
-        String(resource.id) === String(currentEditId)
-          ? {
-              ...resource,
-              id: currentEditId,
-              title,
-              description,
-              link
-            }
-          : resource
-      );
+      resources = resources.map((resource) => {
+        if (String(resource.id) === String(currentEditId)) {
+          return {
+            ...resource,
+            id: currentEditId,
+            title,
+            description,
+            link
+          };
+        }
+        return resource;
+      });
 
       renderTable();
       resourceForm.reset();
@@ -165,18 +154,16 @@ async function handleTableClick(event) {
     const result = await response.json();
 
     if (result.success) {
-      resources = resources.filter(
-        (resource) => String(resource.id) !== String(id)
-      );
+      resources = resources.filter((resource) => String(resource.id) !== String(id));
       renderTable();
     }
+
+    return;
   }
 
   if (target.classList.contains('edit-btn')) {
     const id = target.dataset.id;
-    const resource = resources.find(
-      (item) => String(item.id) === String(id)
-    );
+    const resource = resources.find((item) => String(item.id) === String(id));
 
     if (!resource) {
       return;
@@ -196,7 +183,7 @@ async function loadAndInitialize() {
   const response = await fetch('./api/index.php');
   const result = await response.json();
 
-  if (result.success) {
+  if (result.success && Array.isArray(result.data)) {
     resources = result.data;
   } else {
     resources = [];
@@ -208,6 +195,4 @@ async function loadAndInitialize() {
   resourcesTbody.addEventListener('click', handleTableClick);
 }
 
-// --- Initial Page Load ---
-// Call the main async function to start the application.
 loadAndInitialize();
