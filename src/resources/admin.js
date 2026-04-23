@@ -144,7 +144,8 @@ async function loadAndInitialize() {
   }
 
   resourceForm.addEventListener('submit', handleAddResource);
-  resourcesTbody.addEventListener('click', handleTableClick);
+                      <button type="submit">Post Comment</button>
+
 }
 
 loadAndInitialize();
