@@ -117,7 +117,7 @@ async function handleTableClick(event) {
   if (target.classList.contains("delete-btn")) {
     const id = target.dataset.id;
 
-    const response = await fetch(/api/index.php?id=${id}, {
+    const response = await fetch(`/api/index.php?id=${id}`, {
   method: "DELETE"
 })
 
@@ -153,7 +153,8 @@ async function loadAndInitialize() {
   renderTable();
 
   resourceForm.addEventListener("submit", handleAddResource);
-  resourcesTbody.addEventListener("click", handleTableClick);
+    resourcesTbody.addEventListener("click", handleTableClick);
+
 }
 
 loadAndInitialize();
