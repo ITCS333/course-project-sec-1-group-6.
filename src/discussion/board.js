@@ -1,4 +1,4 @@
-let topics = [];
+ let topics = [];
 
 const newTopicForm = document.getElementById("new-topic-form");
 const topicListContainer = document.getElementById("topic-list-container");
