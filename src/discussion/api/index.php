@@ -21,7 +21,6 @@ $action  = $_GET['action']   ?? null;
 $id      = $_GET['id']       ?? null;
 $topicId = $_GET['topic_id'] ?? null;
 
-/* ================= TOPICS ================= */
 
 function getAllTopics($db) {
     $stmt = $db->query("SELECT * FROM topics ORDER BY created_at DESC");
@@ -81,7 +80,6 @@ function deleteTopic($db, $id) {
     sendResponse(["success" => true]);
 }
 
-/* ================= REPLIES ================= */
 
 function getRepliesByTopicId($db, $topicId) {
     $stmt = $db->prepare("SELECT * FROM replies WHERE topic_id=? ORDER BY created_at ASC");
@@ -123,7 +121,6 @@ function deleteReply($db, $id) {
     sendResponse(["success" => true]);
 }
 
-/* ================= ROUTER ================= */
 
 try {
 
@@ -166,7 +163,6 @@ try {
     sendResponse(["success" => false], 500);
 }
 
-/* ================= HELPERS ================= */
 
 function sendResponse($data, $code = 200) {
     http_response_code($code);
