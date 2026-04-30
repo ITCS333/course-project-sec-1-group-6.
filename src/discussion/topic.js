@@ -6,7 +6,7 @@ const opMessage = document.getElementById("op-message");
 const opFooter = document.getElementById("op-footer");
 const replyListContainer = document.getElementById("reply-list-container");
 const replyForm = document.getElementById("reply-form");
-const newReplyText = document.getElementById("new-reply");
+ const newReplyText = document.getElementById("new-reply");
 
 function getTopicIdFromURL() {
   const params = new URLSearchParams(window.location.search);
