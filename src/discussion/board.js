@@ -6,17 +6,16 @@ const topicListContainer = document.getElementById("topic-list-container");
 function createTopicArticle(topic) {
     const article = document.createElement("article");
 
-    const title = document.createElement("h3");
+    const h3 = document.createElement("h3");
     const link = document.createElement("a");
     link.href = "topic.html?id=" + topic.id;
     link.textContent = topic.subject;
-
-    title.appendChild(link);
+    h3.appendChild(link);
 
     const footer = document.createElement("footer");
     footer.textContent = "Posted by: " + topic.author + " on " + topic.created_at;
 
-    const buttonsDiv = document.createElement("div");
+    const div = document.createElement("div");
 
     const editButton = document.createElement("button");
     editButton.textContent = "Edit";
@@ -28,12 +27,12 @@ function createTopicArticle(topic) {
     deleteButton.className = "delete-btn";
     deleteButton.dataset.id = topic.id;
 
-    buttonsDiv.appendChild(editButton);
-    buttonsDiv.appendChild(deleteButton);
+    div.appendChild(editButton);
+    div.appendChild(deleteButton);
 
-    article.appendChild(title);
+    article.appendChild(h3);
     article.appendChild(footer);
-    article.appendChild(buttonsDiv);
+    article.appendChild(div);
 
     return article;
 }
@@ -42,8 +41,7 @@ function renderTopics() {
     topicListContainer.innerHTML = "";
 
     for (let i = 0; i < topics.length; i++) {
-        const article = createTopicArticle(topics[i]);
-        topicListContainer.appendChild(article);
+        topicListContainer.appendChild(createTopicArticle(topics[i]));
     }
 }
 
@@ -74,7 +72,7 @@ async function handleCreateTopic(event) {
         body: JSON.stringify({
             subject: subject,
             message: message,
-            author: "Student"
+            author: "Fatima Saleh"
         })
     });
 
@@ -85,7 +83,7 @@ async function handleCreateTopic(event) {
             id: result.id,
             subject: subject,
             message: message,
-            author: "Student",
+            author: "Fatima Saleh",
             created_at: new Date().toISOString().slice(0, 19).replace("T", " ")
         });
 
