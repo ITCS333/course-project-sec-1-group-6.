@@ -10,10 +10,10 @@
 <html lang="en">
 <head>
     <!-- TODO: Add the <meta> tag for character encoding (UTF-8). -->
-<meta charset -"UTF-8'>
+<meta charset -"UTF-8">
     <!-- TODO: Add the responsive viewport <meta> tag
          (width=device-width, initial-scale=1.0). -->
-<meta name ="viewport" content="width=device-width, intial-scale=1.0">
+<meta name ="viewport" content="width=device-width, initial-scale=1.0">
     <!-- TODO: Add a <title>, e.g., "Manage Assignments". -->
 <title> Manage Assignments </title>
     <!-- TODO: Link to your CSS framework or stylesheet. -->
@@ -25,7 +25,7 @@
 
     <!-- TODO: Create a <header> containing an <h1> "Manage Assignments". -->
 <header>
-  <h1> Manager Assignments </h1>
+  <h1> Manage Assignments </h1>
 </header>
     <!-- TODO: Create the <main> content area. -->
 <main>
@@ -48,7 +48,7 @@
                          - label for="assignment-title"
                          - input id="assignment-title", type="text", required -->
     <label for="assignment-title" class="form-label">Title</label>
-<input id="assignment-title" type="text" class="from-control"required>
+<input id="assignment-title" type="text" class="form-control"required>
                     <!-- TODO: Add a <label> and <textarea> for the description.
                          - label for="assignment-description"
                          - textarea id="assignment-description", rows="5", required
@@ -95,7 +95,7 @@
             <!-- TODO: Add a sub-heading <h2> "Current Assignments". -->
 <h2> Current Assignments </h2>
             <!-- TODO: Create a <table id="assignments-table">. -->
-<table id="assignment-table">
+<table id="assignments-table">
                 <!-- TODO: Create a <thead> with a <tr> containing <th>
                      elements:
                      - "Title"
@@ -109,7 +109,7 @@
       <th> Title </th>
       <th> Due Date </th>
       <th> Description </th>
-      <th> Action </th>
+      <th> Actions </th>
     </tr>
   </thead>
 
@@ -117,7 +117,7 @@
                      The id is required by admin.js so it can inject
                      <tr> rows. admin.js will clear and repopulate this
                      tbody whenever the data changes. -->
-<tbody id = "assignment-tbody"> 
+<tbody id = "assignments-tbody"> 
 </tbody>
                 <!-- admin.js will inject rows here. Each row follows
                      this structure (do NOT hardcode real data):
