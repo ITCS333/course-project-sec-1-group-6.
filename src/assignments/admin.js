@@ -223,7 +223,7 @@ async function handleTableClick(event) {
    const id = event.target.dataset.id;
 
   if (event.target.classList.contains('delete-btn')) {
-    const response = await fetch(./api/index.php?id=${id}, {
+    const response = await fetch('./api/index.php?id=${id}', {
       method: 'DELETE'
     });
 
