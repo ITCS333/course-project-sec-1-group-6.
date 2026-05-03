@@ -60,15 +60,27 @@ function createAssignmentRow(assignment) {
   // ... your implementation here ...
   const tr = document.createElement('tr');
 
-  tr.innerHTML = `
-    <td>${assignment.title}</td>
-    <td>${assignment.due_date}</td>
-    <td>${assignment.description}</td>
-    <td>
-      <button class="edit-btn" data-id="${assignment.id}">Edit</button>
-      <button class="delete-btn" data-id="${assignment.id}">Delete</button>
-    </td>
-  `;
+ const tdTitle = document.createElement('td');
+  tdTitle.textContent = assignment.title;
+  const tdDate = document.createElement('td');
+  tdDate.textContent = assignment.due_date;
+  const tdDesc = document.createElement('td');
+  tdDesc.textContent = assignment.description;
+  const tdActions = document.createElement('td');
+  const editBtn = document.createElement('button');
+  editBtn.className = 'edit-btn';
+  editBtn.dataset.id = assignment.id;
+  editBtn.textContent = 'Edit';
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'delete-btn';
+  deleteBtn.dataset.id = assignment.id;
+  deleteBtn.textContent = 'Delete';
+  tdActions.appendChild(editBtn);
+  tdActions.appendChild(deleteBtn);
+  tr.appendChild(tdTitle);
+  tr.appendChild(tdDate);
+  tr.appendChild(tdDesc);
+  tr.appendChild(tdActions);
 
   return tr;
 }
