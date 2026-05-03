@@ -232,9 +232,9 @@ async function handleTableClick(event) {
 
   if (!id) return;
 
-  if (target.classList.contains('delete-btn')) {
-    try {
-      const response = await fetch(./api/index.php?id=${id}, {
+ if (target.classList.contains('delete-btn')) {
+  try {
+      const response = await fetch(`./api/index.php?id=${id}`, {
         method: 'DELETE'
       });
 
@@ -246,7 +246,7 @@ async function handleTableClick(event) {
       }
     } catch (error) {
       console.error("Error deleting assignment:", error);
-    }
+    
   }
   if (target.classList.contains('edit-btn')) {
     const assignment = assignments.find(a => a.id == id);
