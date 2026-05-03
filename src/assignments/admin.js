@@ -85,14 +85,12 @@ function createAssignmentRow(assignment) {
  */
 function renderTable() {
   // ... your implementation here ...
-  function renderTable() {
   tableBody.innerHTML = "";
 
   assignments.forEach(assignment => {
     const row = createAssignmentRow(assignment);
     tableBody.appendChild(row);
   });
-}
 }
 
 /**
