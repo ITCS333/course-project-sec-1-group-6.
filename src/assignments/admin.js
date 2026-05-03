@@ -33,8 +33,10 @@ let assignments = [];
 
 // --- Element Selections ---
 // TODO: Select the assignment form by id 'assignment-form'.
-
 // TODO: Select the assignments table body by id 'assignments-tbody'.
+const form = document.getElementById('assignment-form');
+const tableBody = document.getElementById('assignments-tbody');
+const submitBtn = document.getElementById('add-assignment');
 
 // --- Functions ---
 
@@ -56,7 +58,21 @@ let assignments = [];
  */
 function createAssignmentRow(assignment) {
   // ... your implementation here ...
+  const tr = document.createElement('tr');
+
+  tr.innerHTML = `
+    <td>${assignment.title}</td>
+    <td>${assignment.due_date}</td>
+    <td>${assignment.description}</td>
+    <td>
+      <button class="edit-btn" data-id="${assignment.id}">Edit</button>
+      <button class="delete-btn" data-id="${assignment.id}">Delete</button>
+    </td>
+  `;
+
+  return tr;
 }
+
 
 /**
  * TODO: Implement renderTable.
@@ -69,6 +85,14 @@ function createAssignmentRow(assignment) {
  */
 function renderTable() {
   // ... your implementation here ...
+  function renderTable() {
+  tableBody.innerHTML = "";
+
+  assignments.forEach(assignment => {
+    const row = createAssignmentRow(assignment);
+    tableBody.appendChild(row);
+  });
+}
 }
 
 /**
@@ -97,6 +121,41 @@ function renderTable() {
  */
 async function handleAddAssignment(event) {
   // ... your implementation here ...
+   event.preventDefault();
+
+  const title = document.getElementById('assignment-title').value;
+  const due_date = document.getElementById('assignment-due-date').value;
+  const description = document.getElementById('assignment-description').value;
+  const files = document.getElementById('assignment-files').value
+    .split('\n')
+    .filter(f => f.trim() !== "");
+
+  const editId = submitBtn.dataset.editId;
+
+  if (editId) {
+    await handleUpdateAssignment(editId, { title, due_date, description, files });
+    return;
+}
+  const response = await fetch('./api/index.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, due_date, description, files })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    assignments.push({
+      id: result.id,
+      title,
+      due_date,
+      description,
+      files
+    });
+
+    renderTable();
+    form.reset();
+  }
 }
 
 /**
@@ -118,6 +177,24 @@ async function handleAddAssignment(event) {
  */
 async function handleUpdateAssignment(id, fields) {
   // ... your implementation here ...
+   const response = await fetch('./api/index.php', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, ...fields })
+  });
+
+  const result = await response.json();
+
+  if (result.success) {
+    const index = assignments.findIndex(a => a.id == id);
+    assignments[index] = { id, ...fields };
+
+    renderTable();
+    form.reset();
+
+    submitBtn.textContent = "Add Assignment";
+    delete submitBtn.dataset.editId;
+  }
 }
 
 /**
@@ -145,6 +222,32 @@ async function handleUpdateAssignment(id, fields) {
  */
 async function handleTableClick(event) {
   // ... your implementation here ...
+   const id = event.target.dataset.id;
+
+  if (event.target.classList.contains('delete-btn')) {
+    const response = await fetch(./api/index.php?id=${id}, {
+      method: 'DELETE'
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      assignments = assignments.filter(a => a.id != id);
+      renderTable();
+    }
+  }
+
+  if (event.target.classList.contains('edit-btn')) {
+    const assignment = assignments.find(a => a.id == id);
+
+    document.getElementById('assignment-title').value = assignment.title;
+    document.getElementById('assignment-due-date').value = assignment.due_date;
+    document.getElementById('assignment-description').value = assignment.description;
+    document.getElementById('assignment-files').value = assignment.files.join('\n');
+
+    submitBtn.textContent = "Update Assignment";
+    submitBtn.dataset.editId = id;
+  }
 }
 
 /**
@@ -162,6 +265,16 @@ async function handleTableClick(event) {
  */
 async function loadAndInitialize() {
   // ... your implementation here ...
+    const response = await fetch('./api/index.php');
+  const result = await response.json();
+
+  if (result.success) {
+    assignments = result.data;
+    renderTable();
+  }
+
+  form.addEventListener('submit', handleAddAssignment);
+  tableBody.addEventListener('click', handleTableClick);
 }
 
 // --- Initial Page Load ---
