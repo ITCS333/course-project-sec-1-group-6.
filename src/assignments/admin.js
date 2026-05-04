@@ -246,7 +246,7 @@ async function handleTableClick(event) {
       }
     } catch (error) {
       console.error("Error deleting assignment:", error);
-    
+  }
   }
   if (target.classList.contains('edit-btn')) {
     const assignment = assignments.find(a => a.id == id);
