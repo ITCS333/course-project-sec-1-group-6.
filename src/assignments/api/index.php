@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // TODO: Include the shared database connection file.
 // require_once __DIR__ . '/../../common/db.php';
-require_once _DIR_ . '/../../common/db.php';
+require_once __DIR__ . '/../../common/db.php';
 
 // TODO: Get the PDO database connection.
 // $db = getDBConnection();
@@ -163,7 +163,7 @@ $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
        $row['files'] = json_decode($row['files'], true) ?? [];
    }
     // TODO: Call sendResponse(['success' => true, 'data' => $assignments]);
-}
+
   sendResponse(['success' => true, 'data' => $assignments]);
 }
 /**
