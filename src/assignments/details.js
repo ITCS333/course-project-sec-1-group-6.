@@ -95,14 +95,14 @@ function renderAssignmentDetails(assignment) {
 
   assignmentFilesList.innerHTML = "";
 
-  assignment.files.forEach(url => {
+  (assignment.files || []).forEach(url => {
+
     const li = document.createElement('li');
+
     const a = document.createElement('a');
 
     a.href = url;
     a.textContent = url;
-    a.target = "_blank";
-
     li.appendChild(a);
     assignmentFilesList.appendChild(li);
   });
@@ -189,7 +189,7 @@ async function handleAddComment(event) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        assignment_id: parseInt(currentAssignmentId),
+        assignment_id: currentAssignmentId,
         author: "Student",
         text: commentText
       })
@@ -248,13 +248,18 @@ async function initializePage() {
       fetch(`./api/index.php?action=comments&assignment_id=${currentAssignmentId}`)
     ]);
 
+   if (!assignmentRes.ok || !commentsRes.ok) {
+
+      throw new Error("Fetch failed"); 
+   }
     const assignmentResult = await assignmentRes.json();
     const commentsResult = await commentsRes.json();
 
     if (assignmentResult.success) {
       const assignment = assignmentResult.data;
-      currentComments = commentsResult.success ? commentsResult.data : [];
-
+     currentComments = Array.isArray(commentsResult.data)
+        ? commentsResult.data
+        : [];
       renderAssignmentDetails(assignment);
       renderComments();
 
