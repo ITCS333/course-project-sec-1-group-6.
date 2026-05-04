@@ -69,6 +69,7 @@ function getAssignmentIdFromURL() {
   // ... your implementation here ...
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
+  return id ? Number(id) : null;
 }
 
 /**
@@ -103,6 +104,7 @@ function renderAssignmentDetails(assignment) {
 
     a.href = url;
     a.textContent = url;
+    a.target = "_blank";
     li.appendChild(a);
     assignmentFilesList.appendChild(li);
   });
@@ -189,7 +191,7 @@ async function handleAddComment(event) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        assignment_id: currentAssignmentId,
+        assignment_id: Number(currentAssignmentId),
         author: "Student",
         text: commentText
       })
@@ -255,14 +257,16 @@ async function initializePage() {
     const assignmentResult = await assignmentRes.json();
     const commentsResult = await commentsRes.json();
 
+   if (commentsResult.success && Array.isArray(commentsResult.data)) {
+      currentComments = commentsResult.data;
+    } else {
+      currentComments = [];
+    }
+
     if (assignmentResult.success) {
       const assignment = assignmentResult.data;
-     currentComments = Array.isArray(commentsResult.data)
-        ? commentsResult.data
-        : [];
       renderAssignmentDetails(assignment);
       renderComments();
-
       commentForm.addEventListener('submit', handleAddComment);
 
     } else {
