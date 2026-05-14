@@ -125,3 +125,4 @@ test("[HTML-12] <div id='message-container'> exists", () => {
   const div = document.querySelector("div#message-container");
   expect(div).not.toBeNull();
 });
+
